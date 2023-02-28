@@ -28,7 +28,9 @@ func AlterColumn(models interface{}, fields ...map[string]string) error {
 					if checkConstraint(models, constraint) {
 						logs.Notice("Deleting Old Constraint")
 						err := db.Migrator().DropConstraint(models, constraint)
-						logs.Error(err)
+						if err != nil {
+							return err
+						}
 					}
 					logs.Notice("Updating New Constraint")
 					return db.Migrator().CreateConstraint(models, constraint)
